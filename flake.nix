@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs = {
-      url = "github:NixOS/nixpkgs/nixos-24.05";
+      url = "github:NixOS/nixpkgs/nixos-25.05";
     };
     flake-utils = {
       url = "github:numtide/flake-utils";
@@ -199,6 +199,7 @@
             testBinaries = [
               self.packages.${system}.florestad
               utreexod-flake.packages.${system}.utreexod
+              bitcoind
             ];
           in
           {
@@ -216,7 +217,8 @@
                 };
                 pythonDevTools = with pkgs; [
                   uv
-                  python312
+                  python313
+                  pkgs.python313Packages.pytest
                   # If needed, one can add more tools to be used with python. Uv deal with dependencies declared in pyproject.toml
                 ];
               in
