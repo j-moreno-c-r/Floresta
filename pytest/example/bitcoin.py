@@ -1,7 +1,6 @@
 import json
 from bitcoin_rpc import BitcoindDirectTest
 
-
 def test_run_bitcoin_test():
         btc_rpc = BitcoindDirectTest()
         try:
