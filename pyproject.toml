@@ -11,7 +11,8 @@ dependencies = [
   "black>=24.10.0",
   "pylint>=3.3.2",
   "cryptography>=44.0.2",
-  "pyOpenSSL>=25.0.0"
+  "pyOpenSSL>=25.0.0",
+  "pytest>=8.4.1"
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -20,3 +21,10 @@ packages = ["tests/test_framework"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["pytest"]
+pythonpath = [".", "pytest"]
+python_files = ["test_*.py", "*_test.py", "*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

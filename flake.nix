@@ -217,7 +217,8 @@
                 };
                 pythonDevTools = with pkgs; [
                   uv
-                  python312
+                  python313
+                  pkgs.python313Packages.pytest
                   # If needed, one can add more tools to be used with python. Uv deal with dependencies declared in pyproject.toml
                 ];
               in
