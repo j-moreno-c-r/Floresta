@@ -8,12 +8,6 @@ from pathlib import Path
 
 
 class BitcoindDirectTest:
-    expected_chain = "regtest"
-    expected_height = 0
-    expected_headers = 0
-    expected_blockhash = "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"
-    expected_difficulty = 1
-    
     def __init__(self):
         self.bitcoind_process = None
         self.datadir = None
