@@ -60,5 +60,3 @@ class BitcoindTest(FlorestaTestFramework):
         self.stop()
 
 
-if __name__ == "__main__":
-    BitcoindTest().main()
