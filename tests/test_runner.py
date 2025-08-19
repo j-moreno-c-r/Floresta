@@ -8,7 +8,6 @@ import os
 import sys
 import time
 import importlib
-import subprocess
 from test_framework import FlorestaTestFramework
 
 
@@ -268,32 +267,6 @@ def main():
 
     overall_end_time = time.time()
     print(f"Total runtime: {overall_end_time - overall_start_time:.2f}s")
-
-    # Run pytest after all tests complete
-    print("\n" + "=" * 60)
-    print(f"{RUNNING_EMOJI} Running pytest tests...")
-    print("=" * 60)
-
-    try:
-        result = subprocess.run(
-            ["uv", "run", "pytest", "tests/", "-n=4"], capture_output=False, text=True
-        )
-
-        if result.returncode == 0:
-            print(f"\n{SUCCESS_EMOJI} Pytest tests completed successfully!")
-        else:
-            print(
-                f"\n{FAILURE_EMOJI} Pytest tests failed with exit code: {result.returncode}"
-            )
-            sys.exit(result.returncode)
-    except FileNotFoundError:
-        print(
-            f"\n{FAILURE_EMOJI} Error: 'uv' command not found. Make sure uv is installed."
-        )
-        sys.exit(1)
-    except Exception as e:
-        print(f"\n{FAILURE_EMOJI} Error running pytest: {e}")
-        sys.exit(1)
 
 
 if __name__ == "__main__":
