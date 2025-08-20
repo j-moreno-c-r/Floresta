@@ -7,7 +7,7 @@ from io import StringIO
 
 from test_framework import FlorestaTestFramework
 from example.bitcoin import BitcoindTest
-
+from example.electrum import ElectrumTest
 INFO_EMOJI = "ℹ️"
 SUCCESS_EMOJI = "✅"
 FAILURE_EMOJI = "❌"
