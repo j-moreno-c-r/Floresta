@@ -49,29 +49,29 @@ from test_framework import FlorestaTestFramework
 from example.utreexod import UtreexodTest
 from example.bitcoin import BitcoindTest
 from example.electrum import ElectrumTest
-#from example.functional import FunctionalTest
-#from example.integration import IntegrationTest
-#from floresta_cli.addnode_v1 import AddnodeTestV1
-#from floresta_cli.addnode_v2 import AddnodeTestV2
-#from floresta_cli.getbestblockhash import GetBestblockhashTest
-#from floresta_cli.getblockcount import GetBlockCountTest
-#from floresta_cli.uptime import UptimeTest
-#from floresta_cli.stop import StopTest
-#from floresta_cli.getrpcinfo import GetRpcInfoTest
-#from floresta_cli.ping import PingTest
-#from floresta_cli.getblockcount import GetBlockCountTest
-#from floresta_cli.getblockhash import GetBlockhashTest
-#from floresta_cli.getroots import GetRootsIDBLenZeroTest
-#from floresta_cli.getblock import GetBlockTest
-#from floresta_cli.getmemoryinfo import GetMemoryInfoTest
-#from floresta_cli.getblockheader import GetBlockheaderHeightZeroTest
-#from floresta_cli.getpeerinfo import GetPeerInfoTest
-#from floresta_cli.getblockchaininfo import GetBlockchaininfoTest
-#from florestad.connect import CliConnectTest
-#from florestad.restart import TestRestart
-#from florestad.tls import TestSslInitialization
-#from florestad.reorg_chain import ChainReorgTest
-#from florestad.tls_fail import TestSslFailInitialization    
+from example.functional import FunctionalTest
+from example.integration import IntegrationTest
+from floresta_cli.addnode_v1 import AddnodeTestV1
+from floresta_cli.addnode_v2 import AddnodeTestV2
+from floresta_cli.getbestblockhash import GetBestblockhashTest
+from floresta_cli.getblockcount import GetBlockCountTest
+from floresta_cli.uptime import UptimeTest
+from floresta_cli.stop import StopTest
+from floresta_cli.getrpcinfo import GetRpcInfoTest
+from floresta_cli.ping import PingTest
+from floresta_cli.getblockcount import GetBlockCountTest
+from floresta_cli.getblockhash import GetBlockhashTest
+from floresta_cli.getroots import GetRootsIDBLenZeroTest
+from floresta_cli.getblock import GetBlockTest
+from floresta_cli.getmemoryinfo import GetMemoryInfoTest
+from floresta_cli.getblockheader import GetBlockheaderHeightZeroTest
+from floresta_cli.getpeerinfo import GetPeerInfoTest
+from floresta_cli.getblockchaininfo import GetBlockchaininfoTest
+from florestad.connect import CliConnectTest
+from florestad.restart import TestRestart
+from florestad.tls import TestSslInitialization
+from florestad.reorg_chain import ChainReorgTest
+from florestad.tls_fail import TestSslFailInitialization    
 
 
 
@@ -85,14 +85,13 @@ TEST_REGISTRY = {
     #"getrpcinfo": GetRpcInfoTest,
     #"integration": IntegrationTest,
     #"getbestblockhash": GetBestblockhashTest,
-    #"getblockcount": GetBlockCountTest,
     #"getblockhash": GetBlockhashTest,
     #"getblockcount": GetBlockCountTest,
     #"getroots": GetRootsIDBLenZeroTest,
     #"getblock":GetBlockTest,
     #"getmemoryinfo": GetMemoryInfoTest,
     #"getblockheader": GetBlockheaderHeightZeroTest,
-    #"getpeerinfo":GetPeerInfoTest
+    #"getpeerinfo":GetPeerInfoTest,
     #"getblockchaininfo": GetBlockchaininfoTest,
     #"addnodev2": AddnodeTestV2,
     #"addnodev1": AddnodeTestV1,
@@ -102,7 +101,7 @@ TEST_REGISTRY = {
     #"tls_fail":TestSslFailInitialization,
     #"reorg_chain":ChainReorgTest,
     #"restart": TestRestart,
-    "utreexod": UtreexodTest,
+    #"utreexod": UtreexodTest,
     "bitcoin": BitcoindTest,
     "electrum": ElectrumTest,
 }

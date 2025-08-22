@@ -547,16 +547,13 @@ class FlorestaTestFramework(metaclass=FlorestaTestMetaClass):
 
         # Setup daemon and get ports directly
         if variant == "florestad":
-            setup_daemon = getattr(self, "setup_florestad_daemon")
-            daemon, ports = setup_daemon(targetdir, tempdir, testname, extra_args, tls)
+            daemon, ports = self.setup_florestad_daemon(targetdir, tempdir, testname, extra_args, tls)
             rpcserver = copy.deepcopy(florestad_rpc_server)
         elif variant == "utreexod":
-            setup_daemon = getattr(self, "setup_utreexod_daemon")
-            daemon, ports = setup_daemon(targetdir, tempdir, testname, extra_args, tls)
+            daemon, ports = self.setup_utreexod_daemon(targetdir, tempdir, testname, extra_args, tls)
             rpcserver = copy.deepcopy(utreexod_rpc_server)
         elif variant == "bitcoind":
-            setup_daemon = getattr(self, "setup_bitcoind_daemon")
-            daemon, ports = setup_daemon(targetdir, tempdir, testname, extra_args)
+            daemon, ports = self.setup_bitcoind_daemon(targetdir, tempdir, testname, extra_args)
             rpcserver = copy.deepcopy(bitcoind_rpc_server)
         else:
             raise ValueError(
