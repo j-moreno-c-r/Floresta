@@ -6,43 +6,12 @@ from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 
 
-
 INFO_EMOJI = "ℹ️"
 SUCCESS_EMOJI = "✅"
 FAILURE_EMOJI = "❌"
 ALLDONE_EMOJI = "🎉"
 WARNING_EMOJI = "⚠️"
 RUNNING_EMOJI = "🏃"
-
-
-"""BASE_TEST_SUITE = [
-    ("floresta-cli", "addnode-v2"),✅
-    ("floresta-cli", "addnode-v1"),✅
-    ("florestad", "reorg-chain"),❌
-    ("floresta-cli", "getbestblockhash"),❌
-    ("floresta-cli", "getblockcount"),❌
-    ("floresta-cli", "uptime"),✅
-    ("florestad", "restart"),✅
-    ("florestad", "connect"),❌
-    ("floresta-cli", "stop"),✅
-    ("floresta-cli", "ping"),✅
-    ("floresta-cli", "getrpcinfo"),✅
-    ("example", "integration"),❌
-    ("example", "functional"),✅
-    ("example", "electrum"),✅
-    ("floresta-cli", "getblockhash"),✅
-    ("florestad", "tls"),✅
-    ("floresta-cli", "getroots"),✅
-    ("floresta-cli", "getblock"),✅
-    ("floresta-cli", "getmemoryinfo"),✅
-    ("floresta-cli", "getblockheader"),✅
-    ("floresta-cli", "getpeerinfo"),✅
-    ("florestad", "tls-fail"),✅
-    ("floresta-cli", "getblockchaininfo"),✅
-    ("example", "bitcoin"),✅
-    ("example", "utreexod"),❌
-]
-"""
 
 
 from test_framework import FlorestaTestFramework
@@ -75,35 +44,34 @@ from florestad.tls_fail import TestSslFailInitialization
 
 
 
-
-
 # Simple test registry - add more tests here
 TEST_REGISTRY = {
-    #"uptime": UptimeTest,
-    #"stop": StopTest,
-    #"ping" : PingTest, 
-    #"getrpcinfo": GetRpcInfoTest,
-    #"integration": IntegrationTest,
-    #"getbestblockhash": GetBestblockhashTest,
-    #"getblockhash": GetBlockhashTest,
-    #"getblockcount": GetBlockCountTest,
-    #"getroots": GetRootsIDBLenZeroTest,
-    #"getblock":GetBlockTest,
-    #"getmemoryinfo": GetMemoryInfoTest,
-    #"getblockheader": GetBlockheaderHeightZeroTest,
-    #"getpeerinfo":GetPeerInfoTest,
-    #"getblockchaininfo": GetBlockchaininfoTest,
-    #"addnodev2": AddnodeTestV2,
-    #"addnodev1": AddnodeTestV1,
-    #"functional": FunctionalTest,
-    #"connect": CliConnectTest,
-    #"tls": TestSslInitialization,
-    #"tls_fail":TestSslFailInitialization,
-    #"reorg_chain":ChainReorgTest,
-    #"restart": TestRestart,
-    #"utreexod": UtreexodTest,
-    "bitcoin": BitcoindTest,
-    "electrum": ElectrumTest,
+    "addnodev2": AddnodeTestV2,#✅
+    "addnodev1": AddnodeTestV1,#✅
+    "reorg_chain":ChainReorgTest,#❌
+    "getbestblockhash": GetBestblockhashTest,#❌
+    "getblockcount": GetBlockCountTest,#❌
+    "uptime": UptimeTest,#✅
+    "restart": TestRestart,#✅
+    "connect": CliConnectTest,#❌
+    "stop": StopTest,#✅
+    "ping" : PingTest,#✅ 
+    "getrpcinfo": GetRpcInfoTest,#✅
+    "integration": IntegrationTest,#❌
+    "functional": FunctionalTest,#✅
+    "electrum": ElectrumTest,#✅
+    "getblockhash": GetBlockhashTest,#✅
+    "tls": TestSslInitialization,#✅
+    "getroots": GetRootsIDBLenZeroTest,#✅
+    "getblock":GetBlockTest,#✅
+    "getmemoryinfo": GetMemoryInfoTest,#✅
+    "getblockheader": GetBlockheaderHeightZeroTest,#✅
+    "getpeerinfo":GetPeerInfoTest,#✅
+    "tls_fail":TestSslFailInitialization,#✅
+    "getblockchaininfo": GetBlockchaininfoTest,#✅
+    "bitcoin": BitcoindTest,#✅
+    "utreexod": UtreexodTest,#❌
+    
 }
 
 class TestResult:
