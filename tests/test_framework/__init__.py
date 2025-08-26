@@ -322,6 +322,44 @@ class FlorestaTestFramework(metaclass=FlorestaTestMetaClass):
                     return int(address.split(":")[-1])
         return None
 
+    def should_enable_electrum_for_utreexod(self, extra_args: list[str]) -> bool:
+        """
+        Determine if electrum should be enabled for utreexod based on arguments.
+        
+        For utreexod, electrum is only enabled if:
+        1. --electrumlisteners is explicitly set, OR
+        2. --tlselectrumlisteners is explicitly set
+        
+        Unlike other daemons, utreexod does NOT enable electrum by default.
+        You must explicitly configure electrum listeners to enable it.
+        
+        Returns True if electrum should be enabled, False otherwise.
+        """
+        # Check if electrum is explicitly disabled
+        electrum_disabled_options = [
+            "--noelectrum",
+            "--disable-electrum", 
+            "--electrum=false",
+            "--electrum=0"
+        ]
+        
+        for arg in extra_args:
+            if any(arg.startswith(opt) for opt in electrum_disabled_options):
+                return False
+        
+        # Check if electrum listeners are explicitly configured
+        electrum_listener_options = [
+            "--electrumlisteners",
+            "--tlselectrumlisteners"
+        ]
+        
+        for arg in extra_args:
+            if any(arg.startswith(opt) for opt in electrum_listener_options):
+                return True
+        
+        # Default behavior for utreexod: do NOT enable electrum unless explicitly requested
+        return False
+
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     def create_data_dir_for_daemon(
         self,
@@ -368,14 +406,20 @@ class FlorestaTestFramework(metaclass=FlorestaTestMetaClass):
         )
     
         # RPC
-        rpc_port = 18443 + port_index
-        default_args.append(f"--rpc-address=127.0.0.1:{rpc_port}")
-        ports["rpc"] = rpc_port
+        if not self.is_option_set(extra_args, "--rpc-address"):
+            rpc_port = 18443 + port_index
+            default_args.append(f"--rpc-address=127.0.0.1:{rpc_port}")
+            ports["rpc"] = rpc_port
+        else:
+            ports["rpc"] = self.extract_port_from_args(extra_args, "--rpc-address")
     
         # Electrum
-        electrum_port = 20001 + port_index
-        default_args.append(f"--electrum-address=127.0.0.1:{electrum_port}")
-        ports["electrum-server"] = electrum_port
+        if not self.is_option_set(extra_args, "--electrum-address"):
+            electrum_port = 20001 + port_index
+            default_args.append(f"--electrum-address=127.0.0.1:{electrum_port}")
+            ports["electrum-server"] = electrum_port
+        else:
+            ports["electrum-server"] = self.extract_port_from_args(extra_args, "--electrum-address")
     
         # TLS
         if tls:
@@ -383,9 +427,13 @@ class FlorestaTestFramework(metaclass=FlorestaTestMetaClass):
             default_args.append("--enable-electrum-tls")
             default_args.append(f"--tls-key-path={key}")
             default_args.append(f"--tls-cert-path={cert}")
-            tls_electrum_port = 21001 + port_index
-            default_args.append(f"--electrum-address-tls=127.0.0.1:{tls_electrum_port}")
-            ports["electrum-server-tls"] = tls_electrum_port
+            
+            if not self.is_option_set(extra_args, "--electrum-address-tls"):
+                tls_electrum_port = 21001 + port_index
+                default_args.append(f"--electrum-address-tls=127.0.0.1:{tls_electrum_port}")
+                ports["electrum-server-tls"] = tls_electrum_port
+            else:
+                ports["electrum-server-tls"] = self.extract_port_from_args(extra_args, "--electrum-address-tls")
     
         daemon.add_daemon_settings(default_args)
         daemon.add_daemon_settings(extra_args)
@@ -409,32 +457,47 @@ class FlorestaTestFramework(metaclass=FlorestaTestMetaClass):
             "--datadir", default_args, extra_args, tempdir, testname
         )
 
-        # Use portas realmente livres!
-        p2p_port = self.get_available_random_port(18000, 20000)
-        default_args.append(f"--listen=127.0.0.1:{p2p_port}")
-        ports["p2p"] = p2p_port
+        # P2P port
+        if not self.is_option_set(extra_args, "--listen"):
+            p2p_port = self.get_available_random_port(18000, 20000)
+            default_args.append(f"--listen=127.0.0.1:{p2p_port}")
+            ports["p2p"] = p2p_port
+        else:
+            ports["p2p"] = self.extract_port_from_args(extra_args, "--listen")
 
-        rpc_port = self.get_available_random_port(20001, 22000)
-        default_args.append(f"--rpclisten=127.0.0.1:{rpc_port}")
-        ports["rpc"] = rpc_port
+        # RPC port
+        if not self.is_option_set(extra_args, "--rpclisten"):
+            rpc_port = self.get_available_random_port(20001, 22000)
+            default_args.append(f"--rpclisten=127.0.0.1:{rpc_port}")
+            ports["rpc"] = rpc_port
+        else:
+            ports["rpc"] = self.extract_port_from_args(extra_args, "--rpclisten")
 
-        electrum_port = self.get_available_random_port(22001, 24000)
-        default_args.append(f"--electrumlisteners=127.0.0.1:{electrum_port}")
-        ports["electrum-server"] = electrum_port
+        # Check if electrum should be enabled
+        electrum_enabled = self.should_enable_electrum_for_utreexod(extra_args)
+        
+        if electrum_enabled:
+            # Regular electrum port (only if explicitly configured)
+            if self.is_option_set(extra_args, "--electrumlisteners"):
+                ports["electrum-server"] = self.extract_port_from_args(extra_args, "--electrumlisteners")
+            # Note: We don't add default electrum listeners for utreexod unless explicitly requested
 
+        # TLS configuration
         if tls:
             key, cert = self.create_tls_key_cert()
             default_args.append(f"--rpckey={key}")
             default_args.append(f"--rpccert={cert}")
-            tls_electrum_port = self.get_available_random_port(24001, 26000)
-            default_args.append(f"--tlselectrumlisteners=127.0.0.1:{tls_electrum_port}")
-            ports["electrum-server-tls"] = tls_electrum_port
+            
+            # TLS electrum port (only if electrum is enabled and explicitly configured)
+            if electrum_enabled and self.is_option_set(extra_args, "--tlselectrumlisteners"):
+                ports["electrum-server-tls"] = self.extract_port_from_args(extra_args, "--tlselectrumlisteners")
         else:
             default_args.append("--notls")
 
         daemon.add_daemon_settings(default_args)
         daemon.add_daemon_settings(extra_args)
         return daemon, ports
+    
     def setup_bitcoind_daemon(
         self,
         targetdir: str,
@@ -452,21 +515,26 @@ class FlorestaTestFramework(metaclass=FlorestaTestMetaClass):
             "-datadir", default_args, extra_args, tempdir, testname
         )
     
-        # P2P
-        p2p_port = 18445 + port_index
-        default_args.append(f"-bind=127.0.0.1:{p2p_port}")
-        ports["p2p"] = p2p_port
+        # P2P port
+        if not self.is_option_set(extra_args, "-bind"):
+            p2p_port = 18445 + port_index
+            default_args.append(f"-bind=127.0.0.1:{p2p_port}")
+            ports["p2p"] = p2p_port
+        else:
+            ports["p2p"] = self.extract_port_from_args(extra_args, "-bind")
     
-        # RPC
-        rpc_port = 20443 + port_index
-        default_args.append("-rpcallowip=127.0.0.1")
-        default_args.append(f"-rpcbind=127.0.0.1:{rpc_port}")
-        ports["rpc"] = rpc_port
+        # RPC port
+        if not self.is_option_set(extra_args, "-rpcbind"):
+            rpc_port = 20443 + port_index
+            default_args.append("-rpcallowip=127.0.0.1")
+            default_args.append(f"-rpcbind=127.0.0.1:{rpc_port}")
+            ports["rpc"] = rpc_port
+        else:
+            ports["rpc"] = self.extract_port_from_args(extra_args, "-rpcbind")
     
         daemon.add_daemon_settings(default_args)
         daemon.add_daemon_settings(extra_args)
         return daemon, ports
-
 
     def add_node(
         self,
