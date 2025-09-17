@@ -1,10 +1,8 @@
-# tests/conftest.py - pytest fixtures for node management
 import pytest
 import os
 import sys
 from typing import Dict
 
-# Add the tests directory to Python path so we can import test_framework
 sys.path.insert(0, os.path.dirname(__file__))
 
 from node_manager import NodeManager, Node
@@ -152,7 +150,6 @@ def validate_environment():
     os.makedirs(os.path.join(temp_dir, "logs"), exist_ok=True)
     os.makedirs(os.path.join(temp_dir, "data"), exist_ok=True)
     
-    print(f"✅ Test environment validated. Using: {temp_dir}")
 
 
 # Test markers - define custom markers for organizing tests

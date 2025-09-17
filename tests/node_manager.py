@@ -1,12 +1,13 @@
+#This file its a adptation of the original __init__.py from test_framework
+
 import os
 import sys
 import copy
 import random
 import socket
 from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional
+from typing import List, Dict
 
-# Import your existing classes from the test_framework
 from test_framework.crypto.pkcs8 import (
     create_pkcs8_private_key,
     create_pkcs8_self_signed_certificate,
@@ -20,7 +21,6 @@ from test_framework.rpc.utreexo import UtreexoRPC, REGTEST_RPC_SERVER as utreexo
 
 
 class Node:
-    """Keep your existing Node class - it's perfect as is"""
     def __init__(self, daemon, rpc, rpc_config, variant):
         self.daemon = daemon
         self.rpc = rpc
@@ -63,7 +63,6 @@ class Node:
 
 
 class NodeManager:
-    """Extracted and simplified node management - no more metaclass needed!"""
     
     def __init__(self):
         self._nodes = []
@@ -72,19 +71,16 @@ class NodeManager:
 
     @staticmethod
     def get_integration_test_dir():
-        """Get integration test directory from environment"""
         if os.getenv("FLORESTA_TEMP_DIR") is None:
             raise RuntimeError("FLORESTA_TEMP_DIR not set")
         return os.getenv("FLORESTA_TEMP_DIR")
 
     def log(self, msg: str):
-        """Simple logging with timestamp"""
         now = datetime.now(timezone.utc).replace(microsecond=0)
         print(f"[NodeManager {now:%Y-%m-%d %H:%M:%S}] {msg}")
 
     @staticmethod
     def get_available_random_port(start: int, end: int = 65535):
-        """Find an available random port"""
         while True:
             port = random.randint(start, end)
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -92,7 +88,6 @@ class NodeManager:
                     return port
 
     def create_tls_key_cert(self) -> tuple[str, str]:
-        """Create TLS key and certificate"""
         tls_rel_path = os.path.join(self._temp_dir, "data", "tls")
         tls_path = os.path.normpath(os.path.abspath(tls_rel_path))
         os.makedirs(tls_path, exist_ok=True)
@@ -106,7 +101,6 @@ class NodeManager:
         self.log(f"Created self-signed certificate at {cert_path}")
         return (pk_path, cert_path)
 
-    # Keep all your existing helper methods
     def is_option_set(self, extra_args: list[str], option: str) -> bool:
         return any(arg.startswith(option) for arg in extra_args)
 
@@ -136,7 +130,6 @@ class NodeManager:
 
         os.makedirs(datadir, exist_ok=True)
 
-    # Keep all your setup methods exactly as they are
     def setup_florestad_daemon(self, targetdir: str, tempdir: str, testname: str, 
                              extra_args: List[str], tls: bool, port_index: int):
         daemon = FlorestaDaemon()
@@ -231,7 +224,6 @@ class NodeManager:
         return daemon, ports
 
     def create_node(self, extra_args: List[str] = None, variant: str = "florestad", tls: bool = False, testname: str = "pytest") -> Node:
-        """Create a node (but don't start it yet)"""
         if extra_args is None:
             extra_args = []
             
@@ -259,7 +251,6 @@ class NodeManager:
         return node
 
     def start_node(self, node: Node, timeout: int = 180):
-        """Start a node and setup RPC"""
         node.daemon.start()
         
         if node.variant == "florestad":
@@ -273,7 +264,6 @@ class NodeManager:
         self.log(f"Node '{node.variant}' started on ports: {node.rpc_config['ports']}")
 
     def stop_all_nodes(self):
-        """Stop all managed nodes"""
         for node in self._nodes:
             try:
                 node.stop()
@@ -287,6 +277,5 @@ class NodeManager:
         self._nodes.clear()
 
     def cleanup(self):
-        """Full cleanup - stop nodes and reset state"""
         self.stop_all_nodes()
         self._port_counter = 0
