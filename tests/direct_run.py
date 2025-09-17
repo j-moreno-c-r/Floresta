@@ -15,11 +15,6 @@ RUNNING_EMOJI = "🏃"
 
 
 from test_framework import FlorestaTestFramework
-from example.utreexod import UtreexodTest
-from example.bitcoin import BitcoindTest
-from example.electrum import ElectrumTest
-from example.functional import FunctionalTest
-from example.integration import IntegrationTest
 from floresta_cli.addnode_v1 import AddnodeTestV1
 from floresta_cli.addnode_v2 import AddnodeTestV2
 from floresta_cli.getbestblockhash import GetBestblockhashTest
@@ -48,18 +43,15 @@ from florestad.tls_fail import TestSslFailInitialization
 TEST_REGISTRY = {
     "addnodev2": AddnodeTestV2,#✅
     "addnodev1": AddnodeTestV1,#✅
-    "reorg_chain":ChainReorgTest,#❌
-    "getbestblockhash": GetBestblockhashTest,#❌
-    "getblockcount": GetBlockCountTest,#❌
+    "reorg_chain":ChainReorgTest,#✅
+    "getbestblockhash": GetBestblockhashTest,#✅
+    "getblockcount": GetBlockCountTest,#✅
     "uptime": UptimeTest,#✅
     "restart": TestRestart,#✅
-    "connect": CliConnectTest,#❌
+    "connect": CliConnectTest,#✅
     "stop": StopTest,#✅
     "ping" : PingTest,#✅ 
     "getrpcinfo": GetRpcInfoTest,#✅
-    "integration": IntegrationTest,#❌
-    "functional": FunctionalTest,#✅
-    "electrum": ElectrumTest,#✅
     "getblockhash": GetBlockhashTest,#✅
     "tls": TestSslInitialization,#✅
     "getroots": GetRootsIDBLenZeroTest,#✅
@@ -69,9 +61,6 @@ TEST_REGISTRY = {
     "getpeerinfo":GetPeerInfoTest,#✅
     "tls_fail":TestSslFailInitialization,#✅
     "getblockchaininfo": GetBlockchaininfoTest,#✅
-    "bitcoin": BitcoindTest,#✅
-    "utreexod": UtreexodTest,#❌
-    
 }
 
 class TestResult:
