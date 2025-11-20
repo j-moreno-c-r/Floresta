@@ -36,8 +36,12 @@ build-backend = "hatchling.build"
 # Pytest configuration
 [tool.pytest.ini_options]
 # Test discovery
-testpaths = ["tests/"]
-python_files = ["test_*.py", "*_test.py"]
+testpaths = ["tests/example/", "tests/florestad"]
+python_files = [
+"connect.py","tls.py","restart.py","tls-fail.py",
+"bitcoin.py","electrum.py", "functional.py",
+"integration.py","utreexod.py",
+]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 

@@ -44,10 +44,12 @@ class Node:
     """Represents a daemon node with its RPC interface and configuration.
 
     Attributes:
-        daemon: The daemon process wrapper.
-        rpc: The RPC client interface.
-        rpc_config: Dictionary containing RPC configuration including host and ports.
-        variant: String identifier for the node type ('florestad', 'utreexod', 'bitcoind').
+    daemon: The daemon process wrapper.
+    rpc: The RPC client interface.
+    rpc_config: Dictionary containing RPC configuration 
+        including host and ports.
+    variant: String identifier for the node type
+        ('florestad', 'utreexod', 'bitcoind').
     """
 
     def __init__(self, daemon, rpc, rpc_config, variant):
@@ -199,25 +201,12 @@ class NodeManager:
         tls: bool,
         port_index: int,
     ):
-        """Set up a Floresta daemon with configuration.
-
-        Args:
-            targetdir: Directory containing daemon binaries.
-            tempdir: Temporary directory for test data.
-            testname: Name of the test.
-            extra_args: Additional command-line arguments.
-            tls: Whether to enable TLS.
-            port_index: Index for port number calculation.
-
-        Returns:
-            Tuple of (daemon, ports_dict).
-        """
         daemon = FlorestaDaemon()
         daemon.create(target=targetdir)
         default_args, ports = [], {}
 
         self.create_data_dir_for_daemon(
-            "--data-dir", default_args, extra_args, tempdir, testname
+            "--data-dir", default_args, extra_args, testname, "florestad"
         )
 
         if not is_option_set(extra_args, "--rpc-address"):
@@ -237,7 +226,7 @@ class NodeManager:
             )
 
         if tls:
-            key, cert = create_tls_key_cert(self)
+            key, cert = create_tls_key_cert(self._temp_dir, self.log)
             default_args.extend(
                 [
                     "--enable-electrum-tls",
@@ -268,36 +257,12 @@ class NodeManager:
         tls: bool,
         _port_index: int,
     ):
-        """Set up a Utreexo daemon with configuration.
-
-        Args:
-            targetdir: Directory containing daemon binaries.
-            tempdir: Temporary directory for test data.
-            testname: Name of the test.
-            extra_args: Additional command-line arguments.
-            tls: Whether to enable TLS.
-            port_index: Unused, kept for interface consistency.
-
-        Returns:
-            Tuple of (daemon, ports_dict).
-        """
         daemon = UtreexoDaemon()
         daemon.create(target=targetdir)
         default_args, ports = [], {}
-        """
-        Create and configure the data directory for a daemon.
 
-        Allows you to choose meaningful names for the data directory, such as 'getblockchaininfo-bitcoin' or 'ping-floresta', making it easier to identify the purpose of each test by its directory name.
-
-        Args:
-            data_dir_arg: Argument name for the data directory option.
-            default_args: List of default arguments for the daemon.
-            extra_args: List of extra arguments provided by the user.
-            testname: Name of the test, can be used for meaningful directory names.
-            variant: Daemon variant (e.g., 'bitcoin', 'floresta'), also useful for descriptive names.
-        """
         self.create_data_dir_for_daemon(
-            "--datadir", default_args, extra_args, tempdir, testname
+            "--datadir", default_args, extra_args, testname, "utreexod"
         )
 
         if not is_option_set(extra_args, "--listen"):
@@ -320,7 +285,7 @@ class NodeManager:
             )
 
         if tls:
-            key, cert = create_tls_key_cert(self)
+            key, cert = create_tls_key_cert(self._temp_dir, self.log)
             default_args.extend([f"--rpckey={key}", f"--rpccert={cert}"])
 
             if electrum_enabled and is_option_set(extra_args, "--tlselectrumlisteners"):
@@ -341,24 +306,12 @@ class NodeManager:
         extra_args: List[str],
         port_index: int,
     ):
-        """Set up a Bitcoin Core daemon with configuration.
-
-        Args:
-            targetdir: Directory containing daemon binaries.
-            tempdir: Temporary directory for test data.
-            testname: Name of the test.
-            extra_args: Additional command-line arguments.
-            port_index: Index for port number calculation.
-
-        Returns:
-            Tuple of (daemon, ports_dict).
-        """
         daemon = BitcoinDaemon()
         daemon.create(target=targetdir)
         default_args, ports = [], {}
 
         self.create_data_dir_for_daemon(
-            "-datadir", default_args, extra_args, tempdir, testname
+            "-datadir", default_args, extra_args, testname, "bitcoind"
         )
 
         if not is_option_set(extra_args, "-bind"):

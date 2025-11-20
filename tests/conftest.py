@@ -219,3 +219,33 @@ def electrum_setup(node_manager) -> Dict[str, Node]:
     )
     node_manager.start_node(florestad)
     return {"florestad": florestad}
+
+
+@pytest.fixture
+def connect_nodes(node_creator):
+    utreexod_node = node_creator(variant="utreexod", testname="cli_connect_utreexo")
+    node_creator.start(utreexod_node)
+    to_connect = f"{utreexod_node.get_host()}:{utreexod_node.get_port('p2p')}"
+    florestad_node = node_creator(
+        variant="florestad",
+        extra_args=[f"--connect={to_connect}"],
+        testname="cli_connect_florestad",
+    )
+    node_creator.start(florestad_node)
+    return utreexod_node, florestad_node
+
+@pytest.fixture
+def reorg_chain_nodes(node_creator):
+    florestad_node = node_creator(variant="florestad", testname="reorg_florestad")
+    utreexod_node = node_creator(
+        variant="utreexod",
+        extra_args=[
+            "--miningaddr=bcrt1q4gfcga7jfjmm02zpvrh4ttc5k7lmnq2re52z2y",
+            "--utreexoproofindex",
+            "--prune=0",
+        ],
+        testname="reorg_utreexod",
+    )
+    node_creator.start(florestad_node)
+    node_creator.start(utreexod_node)
+    return florestad_node, utreexod_node

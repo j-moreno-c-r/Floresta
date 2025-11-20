@@ -1,4 +1,5 @@
-# i disable all pylint here because this is a temporary file, we will replace it for pytest only soon so i dont want to lose time making it wright
+# i disable all pylint here because this is a temporary file,
+# we will replace it for pytest only soon so i dont want to lose time making it wright
 # pylint: disable-all
 
 import argparse
@@ -33,13 +34,13 @@ TEST_REGISTRY = {
         "floresta-cli.getblockcount", "GetBlockCountTest"
     ),
     "uptime": import_test_class("floresta-cli.uptime", "UptimeTest"),
-    "restart": import_test_class("florestad.restart", "TestRestart"),
-    "connect": import_test_class("florestad.connect", "CliConnectTest"),
+    #"restart": import_test_class("florestad.restart", "TestRestart"),
+    #"connect": import_test_class("florestad.connect", "CliConnectTest"),
     "stop": import_test_class("floresta-cli.stop", "StopTest"),
     "ping": import_test_class("floresta-cli.ping", "PingTest"),
     "getrpcinfo": import_test_class("floresta-cli.getrpcinfo", "GetRpcInfoTest"),
     "getblockhash": import_test_class("floresta-cli.getblockhash", "GetBlockhashTest"),
-    "tls": import_test_class("florestad.tls", "TestSslInitialization"),
+    #"tls": import_test_class("florestad.tls", "TestSslInitialization"),
     "getroots": import_test_class("floresta-cli.getroots", "GetRootsIDBLenZeroTest"),
     "getblock": import_test_class("floresta-cli.getblock", "GetBlockTest"),
     "getmemoryinfo": import_test_class(
@@ -49,9 +50,9 @@ TEST_REGISTRY = {
         "floresta-cli.getblockheader", "GetBlockheaderHeightZeroTest"
     ),
     "getpeerinfo": import_test_class("floresta-cli.getpeerinfo", "GetPeerInfoTest"),
-    "tls_fail": import_test_class("florestad.tls-fail", "TestSslFailInitialization"),
+    #"tls_fail": import_test_class("florestad.tls-fail", "TestSslFailInitialization"),
     "getblockchaininfo": import_test_class(
-        "floresta-cli.getblockchaininfo", "GetBlockchaininfoTest"
+    "floresta-cli.getblockchaininfo", "GetBlockchaininfoTest"
     ),
 }
 
@@ -89,6 +90,7 @@ def run_test_direct(test_name, test_class, verbose=False):
         error_msg = f"Error running test {test_name}: {e}"
         if verbose:
             import traceback
+
             print(traceback.format_exc())
         success = False
 
